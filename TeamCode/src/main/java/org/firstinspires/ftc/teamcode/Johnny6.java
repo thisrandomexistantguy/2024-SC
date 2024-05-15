@@ -45,7 +45,7 @@ public class Johnny6 {
 
     private IMU.Parameters parameters;
 
-    public WebcamName eyeofjohnny6;
+    public WebcamName webcamName;
 
     //Put any CONSTANTS here
 
@@ -115,6 +115,83 @@ public class Johnny6 {
 
 
                 imu.initialize(parameters);
+
+                webcamName = hwMap.get(WebcamName.class, "eyeofjohnny6");
+
+                //Add arm mechanism hardware devices here
+                //Example: armMotor = dcMotor.get( "armMotor" );
+
+                break;
+
+            case MECHANUM:
+
+                //Setup motors that are used for the drivetrain
+                motorFrontLeft = hwMap.dcMotor.get("motorFrontLeft");
+                motorFrontRight = hwMap.dcMotor.get("motorFrontRight");
+                motorBackLeft = hwMap.dcMotor.get("motorBackLeft");
+                motorBackRight = hwMap.dcMotor.get("motorBackRight");
+
+                //Reverse motors
+                motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+                //Here would go any additional hardware devices for the robot
+
+                imu = hwMap.get( IMU.class, "imu");
+
+                parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
+                        RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
+
+                imu.initialize(parameters);
+
+
+                //camera setup!
+                webcamName=hwMap.get(WebcamName.class,"eyeofjohnny6");
+
+                //add arm mechanisms and servo thingys
+
+                allDriveMotors=new DcMotor[]{motorFrontLeft,motorFrontRight,motorBackLeft,motorBackRight};
+                break;
+
+
+            case TEST:
+
+                //setup motors for drivetrain
+                motorFrontLeft = hwMap.dcMotor.get("motorFrontLeft");
+                motorFrontRight = hwMap.dcMotor.get("motorFrontRight");
+                motorBackLeft = hwMap.dcMotor.get("motorBackLeft");
+                motorBackRight = hwMap.dcMotor.get("motorBackRight");
+
+                //Reverse motors
+                motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+                //Here would go any additional hardware devices for the robot
+
+                imu = hwMap.get( IMU.class, "imu");
+
+                parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
+                        RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
+
+                imu.initialize(parameters);
+
+
+                //camera setup!
+                webcamName=hwMap.get(WebcamName.class,"eyeofjohnny6");
+                allDriveMotors=new DcMotor[]{motorFrontLeft,motorFrontRight,motorBackLeft,motorBackRight};
+
+                break;
+
+
+
+
+
         }
     }
 }
