@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class Johnny6 {
 
@@ -188,10 +189,109 @@ public class Johnny6 {
 
                 break;
 
+            default:
+
+                telem.addLine("Invalid type " + drive + " passed to Johnny6's init function. Nothing has been set up ");
+                break;
+        }
+    }
+
+    //Set motor power for all drivetrain motors on robot to 0
+
+    public void rest() {
+        motorBackLeft.setPower( 0 );
+        motorBackRight.setPower( 0 );
+        motorFrontLeft.setPower( 0 );
+        motorFrontRight.setPower( 0 );
+    }
+
+    /*
+    This function controls movement for the robot.
+    @param x the x speed value
+    @param y the y speed value
+    @param turn the turn speed value
+     */
+
+    public void move( double x, double y, double turn ) {
+
+        switch ( drive ) {
+
+            case MECHANUM:
+
+                //Denominator is the larget motor power (absolute value) or 1
+                //This ensures all the powers maintain the same ratio, but only when
+                //at least one is out of the range [-1, 1]
+                double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(turn), 1);
+
+                //Compute values for the power of each motor
+                double frontLeftPower = ( y + x + turn) / denominator;
+                double backLeftPower = ( y - x + turn) / denominator;
+                double frontRightPower = ( y - x - turn) / denominator;
+                double backRightPower = ( y + x - turn) / denominator;
+
+                //Assign that motor power to each motor
+                motorFrontLeft.setPower( frontLeftPower );
+                motorBackLeft.setPower( backLeftPower );
+                motorFrontRight.setPower( frontRightPower );
+                motorBackRight.setPower( backRightPower );
+
+                break;
 
 
+            case TEST:
 
+                //Denominator is the larget motor power (absolute value) or 1
+                //This ensures all the powers maintain the same ratio, but only when
+                //at least one is out of the range [-1, 1]
+
+                denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(turn), 1);
+
+                //Compute values for the power of each motor
+                frontLeftPower = ( y + x + turn) / denominator;
+                backLeftPower = ( y - x + turn) / denominator;
+                frontRightPower = ( y - x - turn) / denominator;
+                backRightPower = ( y + x - turn) / denominator;
+
+                //Assign that motor power to each motor
+                motorFrontLeft.setPower( frontLeftPower );
+                motorBackLeft.setPower( backLeftPower );
+                motorFrontRight.setPower( frontRightPower );
+                motorBackRight.setPower( backRightPower );
+
+                break;
 
         }
     }
+
+    public void moveLeft( double speed ) { move( -speed, 0, 0 ); }
+
+    public void moveRight( double speed ) { move( speed, 0, 0 ); }
+
+    public void moveForward( double speed ) { move( speed, 0, 0 ); }
+
+    public void moveBackward( double speed ) { move( 0, speed, 0 ); }
+
+    public void turnLeft( double speed ) { move( 0, 0, -speed ); }
+
+    public void turnRight( double speed ) { move( 0, 0, speed ); }
+
+
+    public void resetYaw() { imu.resetYaw(); }
+
+    public double getHeading() {
+        return imu.getRobotYawPitchRollAngles().getYaw( AngleUnit.DEGREES);
+    }
+
+    //Set arm motor to the given power here
+    //@param power the power to send to the arm motor
+    //stuff supposed to go here
+
+
+
+
+    /*
+    public void turnRightDegrees(double degrees, double speed){
+        double target= getHeading()+degrees;
+
+    }*/
 }
