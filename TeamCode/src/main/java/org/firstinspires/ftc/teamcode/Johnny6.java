@@ -26,7 +26,7 @@ public class Johnny6 {
 
     public enum Team {
         RED,
-        BLUE
+         BLUE
     }
 
     private Drivetrain drive;
@@ -117,7 +117,7 @@ public class Johnny6 {
 
                 imu.initialize(parameters);
 
-                webcamName = hwMap.get(WebcamName.class, "eyeofjohnny6");
+                //swebcamName = hwMap.get(WebcamName.class, "eyeofjohnny6");
 
                 //Add arm mechanism hardware devices here
                 //Example: armMotor = dcMotor.get( "armMotor" );
