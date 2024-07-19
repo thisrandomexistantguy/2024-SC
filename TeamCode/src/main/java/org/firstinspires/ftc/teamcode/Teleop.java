@@ -30,5 +30,10 @@ public class Teleop extends OpMode {
         johnny6.move(x,y,turn);
 
         if(gamepad1.atRest()) johnny6.rest();
+
+        //code for arm extension
+        if (gamepad2.left_stick_y > 0.3) {
+            johnny6.setArmMotor(gamepad2.left_stick_y / 2);
+        }
     }
 }

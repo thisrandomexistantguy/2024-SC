@@ -39,7 +39,9 @@ public class Johnny6 {
     //[] means array
     public DcMotor[] allDriveMotors;
 
-    //public DcMotor //future necessary robot functions using motors
+    public DcMotor armMotor;
+
+    public DcMotor launchMotor;
 
     //public CRServo //future necessary robot functions using servos
     private IMU imu;
@@ -120,7 +122,7 @@ public class Johnny6 {
                 //swebcamName = hwMap.get(WebcamName.class, "eyeofjohnny6");
 
                 //Add arm mechanism hardware devices here
-                //Example: armMotor = dcMotor.get( "armMotor" );
+                armMotor = hwMap.dcMotor.get( "armMotor" );
 
                 break;
 
@@ -134,9 +136,7 @@ public class Johnny6 {
 
                 //Reverse motors
                 motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-                motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
                 motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-                motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
                 //Here would go any additional hardware devices for the robot
 
@@ -150,7 +150,7 @@ public class Johnny6 {
 
 
                 //camera setup!
-                webcamName=hwMap.get(WebcamName.class,"eyeofjohnny6");
+                //webcamName=hwMap.get(WebcamName.class,"eyeofjohnny6");
 
                 //add arm mechanisms and servo thingys
 
@@ -203,6 +203,8 @@ public class Johnny6 {
         motorBackRight.setPower( 0 );
         motorFrontLeft.setPower( 0 );
         motorFrontRight.setPower( 0 );
+        armMotor.setPower ( 0 );
+        launchMotor.setPower ( 0 );
     }
 
     /*
@@ -284,7 +286,10 @@ public class Johnny6 {
 
     //Set arm motor to the given power here
     //@param power the power to send to the arm motor
-    //stuff supposed to go here
+
+    public void armExtend() { armMotor.setPower(1); }
+
+    public void droneLaunch() { launchMotor.setPower(1); }
 
 
 
