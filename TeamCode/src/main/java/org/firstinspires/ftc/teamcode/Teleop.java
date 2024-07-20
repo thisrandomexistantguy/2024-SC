@@ -10,7 +10,7 @@ public class Teleop extends OpMode {
 
     @Override
     public void init(){
-        johnny6=new Johnny6(this, Johnny6.Drivetrain.MECHANUM);
+        johnny6=new Johnny6(this, Johnny6.Drivetrain.JOHNNY6);
     }
 
     @Override
@@ -32,8 +32,44 @@ public class Teleop extends OpMode {
         if(gamepad1.atRest()) johnny6.rest();
 
         //code for arm extension
-        if (gamepad2.left_stick_y > 0.3) {
-            johnny6.setArmMotor(gamepad2.left_stick_y / 2);
+        if (gamepad2.dpad_up) {
+            johnny6.setArmMotor(1);
+
+        } else {
+            johnny6.setArmMotor(0);
+        }
+        //code for arm retraction
+        if (gamepad2.dpad_down) {
+            johnny6.setArmMotor(-1);
+
+        } else {
+            johnny6.setArmMotor(0);
+        }
+
+        //code for drone launch
+        if (gamepad2.right_trigger > 0.5) {
+            johnny6.setDroneMotor(1);
+
+        } else {
+            johnny6.setDroneMotor(0);
+        }
+
+        //code for lifting the arm
+        if (gamepad2.x) {
+            johnny6.raiseArm();
+
+        } else {
+           johnny6.setArm();
+        }
+
+        //code for opening the claw
+        if (gamepad2.right_bumper) {
+            johnny6.openClaw();
+        }
+
+        //code for closing the claw
+        if (gamepad2.left_bumper) {
+            johnny6.closeClaw();
         }
     }
 }

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -42,6 +43,8 @@ public class Johnny6 {
     public DcMotor armMotor;
 
     public DcMotor launchMotor;
+
+    public Servo liftArm, clawServo;
 
     //public CRServo //future necessary robot functions using servos
     private IMU imu;
@@ -79,6 +82,8 @@ public class Johnny6 {
         drive = type;
 
         setupHardware();
+
+        telem.addLine("init motor test");
     }
 
     public Johnny6(HardwareMap hardwareMap, Drivetrain drivetrain) {
@@ -106,6 +111,7 @@ public class Johnny6 {
 
 
                 motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
                 imu=hwMap.get(IMU.class,"imu");
@@ -123,6 +129,9 @@ public class Johnny6 {
 
                 //Add arm mechanism hardware devices here
                 armMotor = hwMap.dcMotor.get( "armMotor" );
+                launchMotor = hwMap.dcMotor.get( "launchMotor" );
+                liftArm = hwMap.servo.get( "liftArm" );
+                clawServo = hwMap.servo.get( "clawServo" );
 
                 break;
 
@@ -198,13 +207,16 @@ public class Johnny6 {
 
     //Set motor power for all drivetrain motors on robot to 0
 
+    //set powers for motors and positions for servos
     public void rest() {
         motorBackLeft.setPower( 0 );
         motorBackRight.setPower( 0 );
         motorFrontLeft.setPower( 0 );
         motorFrontRight.setPower( 0 );
-        armMotor.setPower ( 0 );
-        launchMotor.setPower ( 0 );
+        armMotor.setPower( 0 );
+        launchMotor.setPower( 0 );
+        liftArm.setPosition( 0 );
+        clawServo.setPosition( 0 );
     }
 
     /*
@@ -218,8 +230,7 @@ public class Johnny6 {
 
         switch ( drive ) {
 
-            case MECHANUM:
-
+            case JOHNNY6:
                 //Denominator is the larget motor power (absolute value) or 1
                 //This ensures all the powers maintain the same ratio, but only when
                 //at least one is out of the range [-1, 1]
@@ -230,6 +241,32 @@ public class Johnny6 {
                 double backLeftPower = ( y - x + turn) / denominator;
                 double frontRightPower = ( y - x - turn) / denominator;
                 double backRightPower = ( y + x - turn) / denominator;
+
+                telem.addLine( "frontLeft: " + frontLeftPower);
+                telem.addLine( "frontRight: " + frontRightPower);
+                telem.addLine( "backLeft: " + backLeftPower);
+                telem.addLine( "backRight: " + backRightPower);
+
+                //Assign that motor power to each motor
+                motorFrontLeft.setPower( frontLeftPower );
+                motorBackLeft.setPower( backLeftPower );
+                motorFrontRight.setPower( frontRightPower );
+                motorBackRight.setPower( backRightPower );
+
+                break;
+
+            case MECHANUM:
+
+                //Denominator is the larget motor power (absolute value) or 1
+                //This ensures all the powers maintain the same ratio, but only when
+                //at least one is out of the range [-1, 1]
+                denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(turn), 1);
+
+                //Compute values for the power of each motor
+                frontLeftPower = ( y + x + turn) / denominator;
+                backLeftPower = ( y - x + turn) / denominator;
+                frontRightPower = ( y - x - turn) / denominator;
+                backRightPower = ( y + x - turn) / denominator;
 
                 //Assign that motor power to each motor
                 motorFrontLeft.setPower( frontLeftPower );
@@ -289,7 +326,23 @@ public class Johnny6 {
 
     public void armExtend() { armMotor.setPower(1); }
 
-    public void droneLaunch() { launchMotor.setPower(1); }
+    public void armDetract() { armMotor.setPower(-1); }
+
+    public void droneLaunch() { launchMotor.setPower(-1); }
+
+    public void setArmMotor( double power ) { armMotor.setPower( power ); }
+
+    public void setDroneMotor(double power ) { launchMotor.setPower( power ); }
+
+    //set servo to the given position
+
+    public void raiseArm() { liftArm.setPosition( 0.9 ); }
+
+    public void setArm() { liftArm.setPosition( 0.3 ); }
+
+    public void openClaw() { clawServo.setPosition( 0.6 ); }
+
+    public void closeClaw() { clawServo.setPosition( 0.1 ); }
 
 
 
