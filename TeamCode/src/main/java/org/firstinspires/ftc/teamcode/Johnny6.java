@@ -40,11 +40,13 @@ public class Johnny6 {
     //[] means array
     public DcMotor[] allDriveMotors;
 
-    public DcMotor armMotor;
+    public DcMotor suspendMotor;
 
     public DcMotor launchMotor;
 
-    public Servo liftArm, clawServo;
+    public DcMotor rotationMotor;
+
+    public Servo flickServo, clawServo;
 
     //public CRServo //future necessary robot functions using servos
     private IMU imu;
@@ -128,9 +130,10 @@ public class Johnny6 {
                 //swebcamName = hwMap.get(WebcamName.class, "eyeofjohnny6");
 
                 //Add arm mechanism hardware devices here
-                armMotor = hwMap.dcMotor.get( "armMotor" );
+                suspendMotor = hwMap.dcMotor.get( "suspendMotor" );
                 launchMotor = hwMap.dcMotor.get( "launchMotor" );
-                liftArm = hwMap.servo.get( "liftArm" );
+                rotationMotor = hwMap.dcMotor.get( "rotationMotor" );
+                flickServo = hwMap.servo.get( "flickServo" );
                 clawServo = hwMap.servo.get( "clawServo" );
 
                 break;
@@ -213,9 +216,10 @@ public class Johnny6 {
         motorBackRight.setPower( 0 );
         motorFrontLeft.setPower( 0 );
         motorFrontRight.setPower( 0 );
-        armMotor.setPower( 0 );
+        suspendMotor.setPower( 0 );
         launchMotor.setPower( 0 );
-        liftArm.setPosition( 0 );
+        rotationMotor.setPower( 0 );
+        flickServo.setPosition( 0 );
         clawServo.setPosition( 0 );
     }
 
@@ -324,21 +328,24 @@ public class Johnny6 {
     //Set arm motor to the given power here
     //@param power the power to send to the arm motor
 
-    public void armExtend() { armMotor.setPower(1); }
+    public void armExtend() { suspendMotor.setPower(1); }
 
-    public void armDetract() { armMotor.setPower(-1); }
+    public void armDetract() { suspendMotor.setPower(-1); }
 
-    public void droneLaunch() { launchMotor.setPower(-1); }
+    public void droneLaunch() { launchMotor.setPower(1); }
 
-    public void setArmMotor( double power ) { armMotor.setPower( power ); }
+    public void rotate() { rotationMotor.setPower(1); }
+
+    public void setRotateMotor( double power ) { rotationMotor.setPower( power ); }
+
+    public void setSuspendMotor( double power ) { suspendMotor.setPower( power ); }
 
     public void setDroneMotor(double power ) { launchMotor.setPower( power ); }
 
     //set servo to the given position
+    public void raiseArm() { flickServo.setPosition( 0.9 ); }
 
-    public void raiseArm() { liftArm.setPosition( 0.9 ); }
-
-    public void setArm() { liftArm.setPosition( 0.3 ); }
+    public void setArm() { flickServo.setPosition( 0.3 ); }
 
     public void openClaw() { clawServo.setPosition( 0.6 ); }
 

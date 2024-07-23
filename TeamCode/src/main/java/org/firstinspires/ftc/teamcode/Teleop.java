@@ -29,21 +29,25 @@ public class Teleop extends OpMode {
 
         johnny6.move(x,y,turn);
 
+        boolean toggle=false;
+        boolean lock=false;
+
+
         if(gamepad1.atRest()) johnny6.rest();
 
         //code for arm extension
         if (gamepad2.dpad_up) {
-            johnny6.setArmMotor(1);
+            johnny6.setSuspendMotor(1);
 
         } else {
-            johnny6.setArmMotor(0);
+            johnny6.setSuspendMotor(0);
         }
         //code for arm retraction
         if (gamepad2.dpad_down) {
-            johnny6.setArmMotor(-1);
+            johnny6.setSuspendMotor(-1);
 
         } else {
-            johnny6.setArmMotor(0);
+            johnny6.setSuspendMotor(0);
         }
 
         //code for drone launch
@@ -54,7 +58,18 @@ public class Teleop extends OpMode {
             johnny6.setDroneMotor(0);
         }
 
-        //code for lifting the arm
+        //code for rotating the arm up and down
+        if (gamepad2.left_stick_y > 0.3) {
+            johnny6.setRotateMotor(gamepad2.left_stick_y / 2);
+
+        } else if (gamepad2.left_stick_y < -0.3) {
+            johnny6.setRotateMotor(gamepad2.left_stick_y / 5);
+
+        } else {
+            johnny6.setRotateMotor(0);
+        }
+
+        //code for flicking up the hook
         if (gamepad2.x) {
             johnny6.raiseArm();
 
@@ -62,14 +77,43 @@ public class Teleop extends OpMode {
            johnny6.setArm();
         }
 
-        //code for opening the claw
-        if (gamepad2.right_bumper) {
-            johnny6.openClaw();
+        if(rbumperPressed != gamepad2.right_bumper) {
+            rbumperPressed = true;
+        }
+        if(rbumberPressed && !rbumperProcessed) {
+            if(clawOpen) {
+                johnny6.closeClaw();
+                clawOpen = false;
+            } else {
+                johnny6.openClaw();
+                clawOpen = true;
+            }
+            rbumperProcessed = true;
+        }
+        if(!gamepad2.right_bumper) {
+            rbumperPressed = false;
+            rbumperProcessed = false;
         }
 
-        //code for closing the claw
-        if (gamepad2.left_bumper) {
-            johnny6.closeClaw();
+        //code for opening the claw
+        /*if (gamepad2.right_bumper) {
+            johnny6.openClaw();
+
         }
+        else if(!gamepad2.right_bumper){
+           johnny6.closeClaw();
+        }
+
+        /*if(gamepad2.right_bumper&&!lock&&!toggle){
+            toggle=true;
+            lock=true;
+        }else if(gamepad2.right_bumper&&!lock&&toggle){
+            toggle=false;
+            lock=true;
+        }else if(!gamepad2.right_bumper){
+            lock=false;
+        }
+        //if(gamepad1.atRest()){johnny6.rest();}*/
     }
 }
+
