@@ -15,12 +15,12 @@ public class Teleop extends OpMode {
 
     @Override
     public void loop(){
-        telemetry.addData("front left encoder: ",johnny6.motorFrontLeft.getCurrentPosition());
-        telemetry.addData("back left encoder: ",johnny6.motorBackLeft.getCurrentPosition());
-        telemetry.addData("front right encoder: ",johnny6.motorFrontRight.getCurrentPosition());
-        telemetry.addData("back right encoder: ",johnny6.motorBackRight.getCurrentPosition());
+        //telemetry.addData("front left encoder: ",johnny6.motorFrontLeft.getCurrentPosition());
+        //telemetry.addData("back left encoder: ",johnny6.motorBackLeft.getCurrentPosition());
+        //telemetry.addData("front right encoder: ",johnny6.motorFrontRight.getCurrentPosition());
+        //telemetry.addData("back right encoder: ",johnny6.motorBackRight.getCurrentPosition());
 
-        telemetry.update();
+        //telemetry.update();
 
         //Key variables for movement
         double y=-gamepad1.left_stick_y/2;
@@ -31,9 +31,17 @@ public class Teleop extends OpMode {
 
         boolean toggle=false;
         boolean lock=false;
+        boolean clawOpen = false;
+        boolean propUp=false;
+
+        boolean rbumperPressed = false;
+        boolean rbumperProcessed = false;
+
+        boolean lbumperPressed=false;
+        boolean lbumperProcessed=false;
 
 
-        if(gamepad1.atRest()) johnny6.rest();
+        //if(gamepad1.atRest()) johnny6.rest();
 
         //code for arm extension
         if (gamepad2.dpad_up) {
@@ -60,14 +68,18 @@ public class Teleop extends OpMode {
 
         //code for rotating the arm up and down
         if (gamepad2.left_stick_y > 0.3) {
-            johnny6.setRotateMotor(gamepad2.left_stick_y / 2);
+            telemetry.addData("rotate motor: ", gamepad2.left_stick_y);
+            johnny6.setRotateMotor(0.6);
 
         } else if (gamepad2.left_stick_y < -0.3) {
-            johnny6.setRotateMotor(gamepad2.left_stick_y / 5);
+            telemetry.addData("rotate motor: ", gamepad2.left_stick_y);
+            johnny6.setRotateMotor(-0.4);
 
         } else {
+            telemetry.addLine("rotate motor off");
             johnny6.setRotateMotor(0);
         }
+        telemetry.update();
 
         //code for flicking up the hook
         if (gamepad2.x) {
@@ -77,10 +89,14 @@ public class Teleop extends OpMode {
            johnny6.setArm();
         }
 
+        if(!gamepad2.right_bumper) {
+            rbumperPressed = false;
+            rbumperProcessed = false;
+        }
         if(rbumperPressed != gamepad2.right_bumper) {
             rbumperPressed = true;
         }
-        if(rbumberPressed && !rbumperProcessed) {
+        if(rbumperPressed && !rbumperProcessed) {
             if(clawOpen) {
                 johnny6.closeClaw();
                 clawOpen = false;
@@ -90,11 +106,28 @@ public class Teleop extends OpMode {
             }
             rbumperProcessed = true;
         }
-        if(!gamepad2.right_bumper) {
-            rbumperPressed = false;
-            rbumperProcessed = false;
-        }
 
+        if(!gamepad2.left_bumper) {
+            lbumperPressed = false;
+            lbumperProcessed = false;
+        }
+        if(lbumperPressed != gamepad2.left_bumper) {
+            lbumperPressed = true;
+        }
+        if(lbumperPressed && !lbumperProcessed) {
+            if(propUp) {
+                johnny6.propSet();
+                propUp = false;
+            } else {
+                johnny6.propUp();
+                propUp = true;
+            }
+            lbumperProcessed = true;
+        }
+        if(!gamepad2.left_bumper) {
+            lbumperPressed = false;
+            lbumperProcessed = false;
+        }
         //code for opening the claw
         /*if (gamepad2.right_bumper) {
             johnny6.openClaw();

@@ -46,7 +46,7 @@ public class Johnny6 {
 
     public DcMotor rotationMotor;
 
-    public Servo flickServo, clawServo;
+    public Servo flickServo, clawServo,armPropServo;
 
     //public CRServo //future necessary robot functions using servos
     private IMU imu;
@@ -135,7 +135,7 @@ public class Johnny6 {
                 rotationMotor = hwMap.dcMotor.get( "rotationMotor" );
                 flickServo = hwMap.servo.get( "flickServo" );
                 clawServo = hwMap.servo.get( "clawServo" );
-
+                armPropServo=hwMap.servo.get("armPropServo");
                 break;
 
             case MECHANUM:
@@ -219,8 +219,7 @@ public class Johnny6 {
         suspendMotor.setPower( 0 );
         launchMotor.setPower( 0 );
         rotationMotor.setPower( 0 );
-        flickServo.setPosition( 0 );
-        clawServo.setPosition( 0 );
+
     }
 
     /*
@@ -343,14 +342,19 @@ public class Johnny6 {
     public void setDroneMotor(double power ) { launchMotor.setPower( power ); }
 
     //set servo to the given position
-    public void raiseArm() { flickServo.setPosition( 0.9 ); }
+    public void raiseArm() { flickServo.setPosition( .5); }
 
-    public void setArm() { flickServo.setPosition( 0.3 ); }
+    public void setArm() { flickServo.setPosition( 0.9 ); }
 
     public void openClaw() { clawServo.setPosition( 0.6 ); }
 
-    public void closeClaw() { clawServo.setPosition( 0.1 ); }
+    public void closeClaw() { clawServo.setPosition( 0.05 ); }
 
+    public void setClawServo() { clawServo.setPosition(0.9); }
+
+    public void propUp(){ armPropServo.setPosition(.5);}
+
+    public void propSet(){armPropServo.setPosition(0);}
 
 
 
