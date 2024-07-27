@@ -346,16 +346,19 @@ public class Johnny6 {
 
     public void setArm() { flickServo.setPosition( 0.9 ); }
 
-    public void openClaw() { clawServo.setPosition( 0.6 ); }
+    public void openClaw() { clawServo.setPosition( 0.67 ); }
 
     public void closeClaw() { clawServo.setPosition( 0.05 ); }
 
-    public void setClawServo() { clawServo.setPosition(0.9); }
+    public void setClawServo() { clawServo.setPosition(0.5); }
 
-    public void propUp(){ armPropServo.setPosition(.5);}
+    public void propUp(){ armPropServo.setPosition(0.5);}
 
-    public void propSet(){armPropServo.setPosition(0);}
+    public void propSet(){armPropServo.setPosition(0.46);}
 
+    //public void turnRightDegrees( double degrees, double speed ) {
+
+    }
 
 
     /*
@@ -364,4 +367,4 @@ public class Johnny6 {
 
     }*/
 
-}
+
