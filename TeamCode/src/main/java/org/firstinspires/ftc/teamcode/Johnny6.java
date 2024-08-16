@@ -9,10 +9,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorTouch;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
+import com.qualcomm.robotcore.hardware.TouchSensor;
 public class Johnny6 {
 
     private HardwareMap hwMap;
@@ -22,12 +23,13 @@ public class Johnny6 {
     public enum Drivetrain {
         MECHANUM,
         JOHNNY6,
-        TEST
+        TEST,
+        TREBUCHET6
     }
 
     public enum Team {
         RED,
-         BLUE
+        BLUE
     }
 
     private Drivetrain drive;
@@ -46,7 +48,13 @@ public class Johnny6 {
 
     public DcMotor rotationMotor;
 
+    //Comp robot servos
     public Servo flickServo, clawServo,armPropServo;
+
+    //Outreach robot servos
+    public Servo lockServo;
+
+    public TouchSensor lockSensor;
 
     //public CRServo //future necessary robot functions using servos
     private IMU imu;
@@ -200,6 +208,27 @@ public class Johnny6 {
                 allDriveMotors=new DcMotor[]{motorFrontLeft,motorFrontRight,motorBackLeft,motorBackRight};
 
                 break;
+
+            case TREBUCHET6:
+
+                motorFrontLeft = hwMap.dcMotor.get("motorFrontLeft");
+                motorFrontRight = hwMap.dcMotor.get("motorFrontRight");
+
+                motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+                imu=hwMap.get(IMU.class,"imu");
+
+                parameters=new IMU.Parameters(new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
+                        RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
+
+
+                imu.initialize(parameters);
+
+                lockServo = hwMap.servo.get( "lockServo" );
+                lockSensor=hwMap.touchSensor.get("lockSensor");
+
 
             default:
 
