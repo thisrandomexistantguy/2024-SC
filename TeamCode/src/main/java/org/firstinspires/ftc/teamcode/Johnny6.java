@@ -9,10 +9,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorTouch;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
+import com.qualcomm.robotcore.hardware.TouchSensor;
 public class Johnny6 {
 
     private HardwareMap hwMap;
@@ -22,12 +23,13 @@ public class Johnny6 {
     public enum Drivetrain {
         MECHANUM,
         JOHNNY6,
-        TEST
+        TEST,
+        TREBUCHET6
     }
 
     public enum Team {
         RED,
-         BLUE
+        BLUE
     }
 
     private Drivetrain drive;
@@ -46,7 +48,13 @@ public class Johnny6 {
 
     public DcMotor rotationMotor;
 
+    //Comp robot servos
     public Servo flickServo, clawServo,armPropServo;
+
+    //Outreach robot servos
+    public Servo lockServo;
+
+    public TouchSensor lockSensor;
 
     //public CRServo //future necessary robot functions using servos
     private IMU imu;
@@ -201,6 +209,27 @@ public class Johnny6 {
                 
                 break;
 
+            case TREBUCHET6:
+
+                motorFrontLeft = hwMap.dcMotor.get("motorFrontLeft");
+                motorFrontRight = hwMap.dcMotor.get("motorFrontRight");
+
+                motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+                imu=hwMap.get(IMU.class,"imu");
+
+                parameters=new IMU.Parameters(new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
+                        RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
+
+
+                imu.initialize(parameters);
+
+                lockServo = hwMap.servo.get( "lockServo" );
+                lockSensor=hwMap.touchSensor.get("lockSensor");
+
+
             default:
 
                 telem.addLine("Invalid type " + drive + " passed to Johnny6's init function. Nothing has been set up ");
@@ -346,16 +375,19 @@ public class Johnny6 {
 
     public void setArm() { flickServo.setPosition( 0.9 ); }
 
-    public void openClaw() { clawServo.setPosition( 0.6 ); }
+    public void openClaw() { clawServo.setPosition( 0.67 ); }
 
     public void closeClaw() { clawServo.setPosition( 0.05 ); }
 
-    public void setClawServo() { clawServo.setPosition(0.9); }
+    public void setClawServo() { clawServo.setPosition(0.5); }
 
-    public void propUp(){ armPropServo.setPosition(.5);}
+    public void propUp(){ armPropServo.setPosition(0.5);}
 
-    public void propSet(){armPropServo.setPosition(0);}
+    public void propSet(){armPropServo.setPosition(0.46);}
 
+    //public void turnRightDegrees( double degrees, double speed ) {
+
+    }
 
 
     /*
@@ -364,4 +396,4 @@ public class Johnny6 {
 
     }*/
 
-}
+
