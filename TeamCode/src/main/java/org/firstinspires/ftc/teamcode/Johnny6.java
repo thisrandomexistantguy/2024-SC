@@ -198,7 +198,7 @@ public class Johnny6 {
                 //camera setup!
                 webcamName=hwMap.get(WebcamName.class,"eyeofjohnny6");
                 allDriveMotors=new DcMotor[]{motorFrontLeft,motorFrontRight,motorBackLeft,motorBackRight};
-
+                
                 break;
 
             default:
