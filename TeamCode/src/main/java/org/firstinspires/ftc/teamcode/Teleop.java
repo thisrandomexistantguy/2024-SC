@@ -8,8 +8,8 @@ public class Teleop extends OpMode {
     //allows for driver customisation
     static final double STRAFE_FACTOR=1.1;
 
-    boolean clawOpen = false;
-    boolean propUp=false;
+    //boolean clawOpen = false;
+    //boolean propUp=false;
 
     boolean rbumperPressed = false;
     boolean rbumperProcessed = false;
